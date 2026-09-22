@@ -1,0 +1,611 @@
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: #f4f6f8;
+
+    color: #1f2937;
+
+    padding: 40px 20px;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: auto;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+
+    text-align: center;
+
+    margin-bottom: 35px;
+}
+
+
+.badge {
+
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    background: #e5e7eb;
+
+    color: #374151;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 15px;
+}
+
+
+.hero h1 {
+
+    font-size: 44px;
+
+    margin-bottom: 10px;
+}
+
+
+.hero p {
+
+    color: #6b7280;
+
+    font-size: 17px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 30px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+
+.section-title h2 {
+
+    font-size: 19px;
+}
+
+
+#characterCount {
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+textarea {
+
+    width: 100%;
+
+    min-height: 200px;
+
+    resize: vertical;
+
+    border: 2px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 16px;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    outline: none;
+
+    transition: border-color 0.2s;
+}
+
+
+textarea:focus {
+
+    border-color: #6b7280;
+}
+
+
+textarea::placeholder {
+
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.actions {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 15px;
+}
+
+
+.examples {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.example-button {
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    border: 1px solid #e5e7eb;
+
+    padding: 9px 12px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.example-button:hover {
+
+    background: #e5e7eb;
+}
+
+
+.primary-button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding: 12px 22px;
+
+    background: #111827;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.primary-button:hover {
+
+    opacity: 0.9;
+}
+
+
+.primary-button:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 20px;
+
+    color: #6b7280;
+}
+
+
+.spinner {
+
+    width: 20px;
+
+    height: 20px;
+
+    border: 3px solid #e5e7eb;
+
+    border-top-color: #374151;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result-card {
+
+    border: 2px solid #e5e7eb;
+
+    transition:
+        border-color 0.3s;
+}
+
+
+.result-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+
+.result-label {
+
+    color: #9ca3af;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+#sentiment {
+
+    font-size: 34px;
+
+    margin-top: 5px;
+}
+
+
+.confidence {
+
+    text-align: right;
+}
+
+
+.confidence span {
+
+    display: block;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+.confidence strong {
+
+    font-size: 28px;
+}
+
+
+/* =========================================================
+   PROBABILITY BARS
+========================================================= */
+
+.probability-row {
+
+    margin-bottom: 20px;
+}
+
+
+.probability-info {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.progress {
+
+    width: 100%;
+
+    height: 12px;
+
+    background: #e5e7eb;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+
+.progress-bar {
+
+    height: 100%;
+
+    width: 0;
+
+    border-radius: 20px;
+
+    transition:
+        width 0.7s ease;
+}
+
+
+.negative-bar {
+
+    background: #dc2626;
+}
+
+
+.positive-bar {
+
+    background: #16a34a;
+}
+
+
+.positive-result {
+
+    border-color: #86efac;
+}
+
+
+.negative-result {
+
+    border-color: #fca5a5;
+}
+
+
+/* =========================================================
+   MODEL STATS
+========================================================= */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+
+.stat {
+
+    background: #f9fafb;
+
+    border-radius: 10px;
+
+    padding: 16px;
+}
+
+
+.stat span {
+
+    display: block;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+
+    margin-bottom: 6px;
+}
+
+
+.stat strong {
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    padding: 14px 16px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+
+.hidden {
+
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+
+        padding: 25px 15px;
+    }
+
+
+    .hero h1 {
+
+        font-size: 34px;
+    }
+
+
+    .actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .examples {
+
+        flex-direction: column;
+    }
+
+
+    .primary-button {
+
+        width: 100%;
+    }
+
+
+    .stats-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+
+    .result-header {
+
+        align-items: flex-start;
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .stats-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+}

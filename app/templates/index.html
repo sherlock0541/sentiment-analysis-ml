@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Sentiment Analyzer</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+<main class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <section class="hero">
+
+        <div class="badge">
+            MACHINE LEARNING PROJECT
+        </div>
+
+        <h1>
+            Sentiment Analyzer
+        </h1>
+
+        <p>
+            Analyze movie reviews using
+            Natural Language Processing.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         ANALYZER
+    ====================================================== -->
+
+    <section class="card">
+
+        <div class="section-title">
+
+            <h2>
+                Analyze a Review
+            </h2>
+
+            <span id="characterCount">
+                0 characters
+            </span>
+
+        </div>
+
+
+        <textarea
+            id="review"
+            placeholder="Write or paste a movie review here..."
+        ></textarea>
+
+
+        <div class="actions">
+
+            <div class="examples">
+
+                <button
+                    class="example-button"
+                    onclick="useExample('positive')"
+                >
+                    Positive example
+                </button>
+
+                <button
+                    class="example-button"
+                    onclick="useExample('negative')"
+                >
+                    Negative example
+                </button>
+
+            </div>
+
+
+            <button
+                id="analyzeButton"
+                class="primary-button"
+                onclick="analyzeSentiment()"
+            >
+                Analyze Sentiment
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LOADING
+    ====================================================== -->
+
+    <div
+        id="loading"
+        class="loading hidden"
+    >
+
+        <div class="spinner"></div>
+
+        <span>
+            Analyzing review...
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        id="error"
+        class="error hidden"
+    ></div>
+
+
+    <!-- =====================================================
+         RESULT
+    ====================================================== -->
+
+    <section
+        id="result"
+        class="card result-card hidden"
+    >
+
+        <div class="result-header">
+
+            <div>
+
+                <span class="result-label">
+                    PREDICTED SENTIMENT
+                </span>
+
+                <h2 id="sentiment">
+                    POSITIVE
+                </h2>
+
+            </div>
+
+
+            <div class="confidence">
+
+                <span>
+                    Confidence
+                </span>
+
+                <strong id="confidence">
+                    0%
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- Probability -->
+
+        <div class="probabilities">
+
+            <div class="probability-row">
+
+                <div class="probability-info">
+
+                    <span>
+                        Negative
+                    </span>
+
+                    <span id="negativeValue">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        id="negativeBar"
+                        class="progress-bar negative-bar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="probability-row">
+
+                <div class="probability-info">
+
+                    <span>
+                        Positive
+                    </span>
+
+                    <span id="positiveValue">
+                        0%
+                    </span>
+
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        id="positiveBar"
+                        class="progress-bar positive-bar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MODEL INFORMATION
+    ====================================================== -->
+
+    <section class="card">
+
+        <div class="section-title">
+
+            <h2>
+                Model Information
+            </h2>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat">
+
+                <span>
+                    Model
+                </span>
+
+                <strong id="modelName">
+                    Loading...
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>
+                    Accuracy
+                </span>
+
+                <strong id="accuracy">
+                    Loading...
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>
+                    ROC-AUC
+                </span>
+
+                <strong id="rocAuc">
+                    Loading...
+                </strong>
+
+            </div>
+
+
+            <div class="stat">
+
+                <span>
+                    Features
+                </span>
+
+                <strong>
+                    TF-IDF
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        <p>
+            Built with Python · Flask · Scikit-learn · TF-IDF
+        </p>
+
+        <p>
+            IMDb Movie Reviews Dataset
+        </p>
+
+    </footer>
+
+
+</main>
+
+
+<script>
+
+
+// ============================================================
+// ELEMENTS
+// ============================================================
+
+const reviewInput =
+    document.getElementById("review");
+
+const characterCount =
+    document.getElementById("characterCount");
+
+
+// ============================================================
+// CHARACTER COUNTER
+// ============================================================
+
+reviewInput.addEventListener(
+    "input",
+    function () {
+
+        characterCount.textContent =
+            `${this.value.length} characters`;
+
+    }
+);
+
+
+// ============================================================
+// EXAMPLE REVIEWS
+// ============================================================
+
+function useExample(type) {
+
+    if (type === "positive") {
+
+        reviewInput.value =
+            "This movie was fantastic. The story was engaging, the acting was excellent, and I really enjoyed every minute of it.";
+
+    } else {
+
+        reviewInput.value =
+            "This movie was extremely disappointing. The story was boring, the acting was terrible, and I regretted watching it.";
+
+    }
+
+
+    reviewInput.dispatchEvent(
+        new Event("input")
+    );
+
+}
+
+
+// ============================================================
+// ANALYZE
+// ============================================================
+
+async function analyzeSentiment() {
+
+    const text =
+        reviewInput.value.trim();
+
+    const result =
+        document.getElementById("result");
+
+    const error =
+        document.getElementById("error");
+
+    const loading =
+        document.getElementById("loading");
+
+    const button =
+        document.getElementById("analyzeButton");
+
+
+    error.classList.add("hidden");
+
+    result.classList.add("hidden");
+
+
+    if (!text) {
+
+        showError(
+            "Please enter a review first."
+        );
+
+        return;
+
+    }
+
+
+    loading.classList.remove("hidden");
+
+    button.disabled = true;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/predict",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        text: text
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Prediction failed."
+            );
+
+        }
+
+
+        displayResult(data);
+
+
+    } catch (err) {
+
+        showError(
+            err.message
+        );
+
+    } finally {
+
+        loading.classList.add("hidden");
+
+        button.disabled = false;
+
+    }
+
+}
+
+
+// ============================================================
+// DISPLAY RESULT
+// ============================================================
+
+function displayResult(data) {
+
+    const result =
+        document.getElementById("result");
+
+    const sentiment =
+        document.getElementById("sentiment");
+
+    const confidence =
+        document.getElementById("confidence");
+
+    const negativeValue =
+        document.getElementById("negativeValue");
+
+    const positiveValue =
+        document.getElementById("positiveValue");
+
+    const negativeBar =
+        document.getElementById("negativeBar");
+
+    const positiveBar =
+        document.getElementById("positiveBar");
+
+
+    sentiment.textContent =
+        data.sentiment.toUpperCase();
+
+
+    confidence.textContent =
+        `${(
+            data.confidence * 100
+        ).toFixed(1)}%`;
+
+
+    const negative =
+        data.probabilities.negative * 100;
+
+    const positive =
+        data.probabilities.positive * 100;
+
+
+    negativeValue.textContent =
+        `${negative.toFixed(1)}%`;
+
+    positiveValue.textContent =
+        `${positive.toFixed(1)}%`;
+
+
+    negativeBar.style.width =
+        `${negative}%`;
+
+    positiveBar.style.width =
+        `${positive}%`;
+
+
+    result.classList.remove(
+        "positive-result",
+        "negative-result"
+    );
+
+
+    if (
+        data.sentiment === "positive"
+    ) {
+
+        result.classList.add(
+            "positive-result"
+        );
+
+    } else {
+
+        result.classList.add(
+            "negative-result"
+        );
+
+    }
+
+
+    result.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+// ============================================================
+// ERROR
+// ============================================================
+
+function showError(message) {
+
+    const error =
+        document.getElementById("error");
+
+    error.textContent =
+        message;
+
+    error.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+// ============================================================
+// MODEL INFORMATION
+// ============================================================
+
+async function loadModelInfo() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/model-info"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        document.getElementById(
+            "modelName"
+        ).textContent =
+            data.model;
+
+
+        document.getElementById(
+            "accuracy"
+        ).textContent =
+            `${(
+                data.accuracy * 100
+            ).toFixed(2)}%`;
+
+
+        document.getElementById(
+            "rocAuc"
+        ).textContent =
+            data.roc_auc.toFixed(4);
+
+
+    } catch (error) {
+
+        console.error(
+            "Could not load model information.",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// KEYBOARD SHORTCUT
+// ============================================================
+
+reviewInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.ctrlKey &&
+            event.key === "Enter"
+        ) {
+
+            analyzeSentiment();
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+loadModelInfo();
+
+</script>
+
+</body>
+
+</html>
